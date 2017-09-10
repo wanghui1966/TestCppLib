@@ -1,0 +1,42 @@
+linux下将c++代码打包成静态库和动态库并使用的方法。
+
+# 1. 静态库
+脚本为：test_static_lib.sh
+
+生成静态库：
+[hwang@MJ_Dev:~/test/TestLib]$ ls
+test.cpp  wind.cpp  wind.h
+[hwang@MJ_Dev:~/test/TestLib]$ g++ -c wind.cpp -o wind.o
+[hwang@MJ_Dev:~/test/TestLib]$ ar -crv libwind.a wind.o
+a - wind.o
+[hwang@MJ_Dev:~/test/TestLib]$ ls
+libwind.a  test.cpp  wind.cpp  wind.h  wind.o
+
+使用静态库：
+[hwang@MJ_Dev:~/test/TestLib]$ ls
+libwind.a  test.cpp  wind.cpp  wind.h  wind.o
+[hwang@MJ_Dev:~/test/TestLib]$ g++ test.cpp -o test -static -L. -lwind
+[hwang@MJ_Dev:~/test/TestLib]$ ./test 
+StaticFunc test!
+MemberFunc test!
+GlobalFunc test!
+
+# 2. 动态库
+脚本为：test_dynamic_lib.sh
+
+生成动态库：
+[hwang@MJ_Dev:~/test/TestLib]$ ls
+test.cpp  wind.cpp  wind.h
+[hwang@MJ_Dev:~/test/TestLib]$ g++ -shared -fpic -o libwind.so wind.cpp
+[hwang@MJ_Dev:~/test/TestLib]$ ls
+libwind.so  test.cpp  wind.cpp  wind.h
+
+使用动态库：
+[hwang@MJ_Dev:~/test/TestLib]$ ls
+libwind.so  test.cpp  wind.cpp  wind.h
+[hwang@MJ_Dev:~/test/TestLib]$ g++ test.cpp -o test -L. -lwind
+[hwang@MJ_Dev:~/test/TestLib]$ export LD_LIBRARY_PATH=.:$LD_LIBRARY_PATH
+[hwang@MJ_Dev:~/test/TestLib]$ ./test 
+StaticFunc test!
+MemberFunc test!
+GlobalFunc test!
